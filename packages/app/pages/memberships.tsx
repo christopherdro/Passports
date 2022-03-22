@@ -551,7 +551,6 @@ const MembershipCard = (props: IMembershipCardProps) => {
           >
             <ModalInput
               label={"New Supply"}
-              value={newSupply}
               onChange={(e) => setNewSupply(Number(e.target.value))}
               type={"number"}
             />

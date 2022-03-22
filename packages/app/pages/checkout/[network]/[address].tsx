@@ -6,7 +6,7 @@ import BN from "bn.js";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 import IpfsImage from "../../../components/IpfsImage";
-import { Checkbox, Label, styled } from "@cabindao/topo";
+import { Checkbox, Label, Select, styled } from "@cabindao/topo";
 import { getWeb3 } from "../../../components/utils";
 import {
   useAddress,
@@ -189,10 +189,13 @@ const CheckoutPageContent = ({
   useEffect(() => {
     if (!Object.entries(metadata).length && metadataHash) {
       axios.get(`https://ipfs.io/ipfs/${metadataHash}`).then((r) => {
-        setMetadata(r.data);
+        if (Object.entries(r.data)) {
+          setMetadata(r.data);
+        }
       });
     }
   }, [metadata, metadataHash]);
+  
   useEffect(() => {
     if (qrFile)
       QRCode.toCanvas(qrCanvasRef.current, qrFile).catch((e) =>
@@ -313,7 +316,19 @@ const CheckoutPageContent = ({
               ) || `Buy (${supply} left)`}
             </Button>
           </div>
+          
           <CheckBoxContainer>
+            <Label label={"Generate Apple Wallet Pass"}>
+              <Checkbox
+                checked={generateApplePass}
+                onCheckedChange={(e) =>
+                  e === "indeterminate"
+                    ? setGenerateApplePass(false)
+                    : setGenerateApplePass(e)
+                }
+                disabled={!correctNetwork}
+              />
+            </Label>
             <Label label={"Generate Apple Wallet Pass"}>
               <Checkbox
                 checked={generateApplePass}
